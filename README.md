@@ -3,10 +3,12 @@
 As the name suggests, it's a wordle clone.
 Wanted try and make something with svelte.
 
-# Running
+# Developing
 
-`npm install
-npm run dev`
+```bash
+npm install
+npm run dev
+```
 
 # Improvements
 
