@@ -1,38 +1,22 @@
 <script lang="ts">
 	import { GuessType } from '$lib/stores/game.svelte';
 	import KeyboardButton, { KeySize } from './keyboard-button.svelte';
-	import { createEventDispatcher } from 'svelte';
 
-	export let keyboard: Map<string, GuessType>;
-	export let enabled: boolean;
+	interface Props {
+		keyboard: Map<string, GuessType>;
+		enabled: boolean;
+		onKey: Function;
+		onSubmit: Function;
+		onDelete: Function;
+	}
 
-	let focused: string | undefined;
-
-	const dispatch = createEventDispatcher();
+	const { keyboard, enabled, onKey, onSubmit, onDelete }: Props = $props();
 
 	const keys = [
 		['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
 		['', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ''],
 		['enter', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'backspace']
 	];
-
-	function onKeyboard(event: CustomEvent<string>) {
-		if (!enabled) return;
-
-		dispatch('key', event.detail);
-	}
-
-	function onDelete() {
-		if (!enabled) return;
-
-		dispatch('delete');
-	}
-
-	function onSubmit() {
-		if (!enabled) return;
-
-		dispatch('submit');
-	}
 </script>
 
 <div>
@@ -43,7 +27,7 @@
 					<div class="flex-[0.5] h-10"></div>
 				{:else if key === 'enter'}
 					<KeyboardButton
-						on:keyboard={onSubmit}
+						onKey={onSubmit}
 						displayKey={'ent'}
 						size={KeySize.Large}
 						type={GuessType.None}
@@ -52,7 +36,7 @@
 					/>
 				{:else if key === 'backspace'}
 					<KeyboardButton
-						on:keyboard={onDelete}
+						onKey={onDelete}
 						displayKey={'del'}
 						size={KeySize.Large}
 						type={GuessType.None}
@@ -61,8 +45,9 @@
 					/>
 				{:else}
 					<KeyboardButton
-						on:keyboard={onKeyboard}
 						type={keyboard.get(key) ?? GuessType.None}
+						size={KeySize.Medium}
+						{onKey}
 						{key}
 						{enabled}
 					/>

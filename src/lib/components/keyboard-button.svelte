@@ -7,32 +7,46 @@
 
 <script lang="ts">
 	import keyboardJS from 'keyboardjs';
-	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
 
 	import { GuessType } from '$lib/stores/game.svelte';
 	import { BackgroundColour } from '$lib/utils/background-colours';
 
-	const dispatch = createEventDispatcher();
+	interface Props {
+		key: string;
+		displayKey?: string;
+		size: KeySize;
+		type: GuessType;
+		enabled: boolean;
+		onKey: Function;
+	}
 
-	export let key: string;
-	export let displayKey: string = key;
-	export let size: KeySize = KeySize.Medium;
-	export let type: GuessType;
-	export let enabled: boolean;
+	const { key, displayKey, size, type, enabled, onKey }: Props = $props();
 
 	let node: HTMLElement;
-
-	let pressed: boolean = false;
 	let timeout: NodeJS.Timeout;
-	let background: string = '';
 
-	$: {
+	let pressed: boolean = $state(false);
+	let background: string = $state('');
+
+	$effect(() => {
+		keyboardJS.setContext('keyboard');
+		keyboardJS.bind(key, onKeyboard);
+
+		return () => {
+			keyboardJS.setContext('keyboard');
+			keyboardJS.off(key, onKeyboard);
+
+			clearTimeout(timeout);
+		};
+	});
+
+	$effect(() => {
 		if (type === GuessType.None) {
 			background = 'bg-gray-500';
 		} else {
 			background = BackgroundColour[type];
 		}
-	}
+	});
 
 	function onKeyboard() {
 		emitKey();
@@ -45,7 +59,7 @@
 	function emitKey() {
 		if (!enabled) return;
 
-		dispatch('keyboard', key);
+		onKey(key);
 		beginFlash();
 	}
 
@@ -63,24 +77,12 @@
 		clearTimeout(timeout);
 		node.removeEventListener('transitionend', endFlash);
 	}
-
-	onMount(() => {
-		keyboardJS.setContext('keyboard');
-		keyboardJS.bind(key, onKeyboard);
-	});
-
-	onDestroy(() => {
-		keyboardJS.setContext('keyboard');
-		keyboardJS.off(key, onKeyboard);
-
-		clearTimeout(timeout);
-	});
 </script>
 
 <button
 	bind:this={node}
-	on:pointerdown={onPointerDown}
+	onpointerdown={onPointerDown}
 	class={`transition-colors rounded h-14 text-white font-bold uppercase touch-manipulation ${size === KeySize.Medium ? 'flex-1' : 'flex-[1.5] '} ${pressed ? 'bg-gray-300' : background}`}
 >
-	{displayKey}
+	{displayKey ? displayKey : key}
 </button>
