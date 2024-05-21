@@ -4,7 +4,7 @@ import { validateGuess, getRandomWord, isValidWord } from '$lib/utils/words';
 export enum GuessType {
 	None,
 	Incorrect,
-	InWord,
+	Valid,
 	Correct
 }
 
