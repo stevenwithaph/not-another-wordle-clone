@@ -82,6 +82,7 @@
 <button
 	bind:this={node}
 	onpointerdown={onPointerDown}
+	id={`key-${key}`}
 	class={`transition-colors rounded h-14 text-white font-bold uppercase touch-manipulation ${size === KeySize.Medium ? 'flex-1' : 'flex-[1.5] '} ${pressed ? 'bg-gray-300' : background}`}
 >
 	{displayKey ? displayKey : key}

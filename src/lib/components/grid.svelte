@@ -21,9 +21,13 @@
 
 <div class="grid grid-rows-6 gap-y-2">
 	{#each { length: 6 } as _, i}
-		<div class:animate-wiggle={wiggle === i} class="grid grid-cols-5 gap-x-2">
+		<div id={`grid-${i}`} class:animate-wiggle={wiggle === i} class="grid grid-cols-5 gap-x-2">
 			{#each { length: 5 } as _, j}
-				<GridItem character={guesses[j + i * 5].character} type={guesses[j + i * 5].type} />
+				<GridItem
+					character={guesses[j + i * 5].character}
+					type={guesses[j + i * 5].type}
+					index={j}
+				/>
 			{/each}
 		</div>
 	{/each}

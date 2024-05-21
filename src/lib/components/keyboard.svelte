@@ -19,7 +19,7 @@
 	];
 </script>
 
-<div>
+<div id="keyboard">
 	{#each keys as row}
 		<div class="flex flex-row mb-2 space-x-1.5">
 			{#each row as key}

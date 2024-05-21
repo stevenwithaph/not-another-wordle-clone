@@ -7,17 +7,18 @@
 	interface Props {
 		character: string;
 		type: GuessType;
+		index: number;
 	}
 
-	const { character, type }: Props = $props();
+	const { character, type, index }: Props = $props();
 </script>
 
 <div
 	class={`aspect-square text-white font-bold uppercase flex justify-center items-center text-4xl rounded transition-colors relative`}
 >
 	{#if type === GuessType.None}
-		<GridItemEmpty {character} />
+		<GridItemEmpty {index} {character} />
 	{:else}
-		<GridItemGuessed {character} background={BackgroundColour[type]} />
+		<GridItemGuessed {index} {character} background={BackgroundColour[type]} />
 	{/if}
 </div>
