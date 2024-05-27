@@ -64,18 +64,17 @@
 	}
 
 	async function beginFlash() {
-		endFlash();
+		pressed = true;
+		clearTimeout(timeout);
 
+		//not the most elegant, but transitionendevent sometimes wouldn't fire causing buttons to be stuck
 		timeout = setTimeout(() => {
-			pressed = true;
-			node.addEventListener('transitionend', endFlash);
-		});
+			endFlash();
+		}, 150);
 	}
 
 	function endFlash() {
 		pressed = false;
-		clearTimeout(timeout);
-		node.removeEventListener('transitionend', endFlash);
 	}
 </script>
 
