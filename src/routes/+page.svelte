@@ -10,6 +10,8 @@
 
 	function onKey(key: string) {
 		store.add(key);
+
+		console.log(store.word);
 	}
 
 	function onSubmit() {
@@ -47,8 +49,18 @@
 					<p>Winner!</p>
 				{:else if !store.isWinner}
 					<p>Whomp Whomp.</p>
-					<p>The word was <span class="capitalize">{store.word}</span></p>
 				{/if}
+				<p>
+					The word was <span class="capitalize">
+						<a
+							class="underline text-green-700 hover:green-800"
+							target="_blank"
+							href={`https://en.wiktionary.org/wiki/${store.word}`}
+						>
+							{store.word}
+						</a>
+					</span>
+				</p>
 				<button
 					class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
 					onclick={onReset}>Play Again?</button

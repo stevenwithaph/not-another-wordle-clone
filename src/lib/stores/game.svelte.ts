@@ -99,11 +99,11 @@ export function createGameStore() {
 
 		if (word === getCurrentGuess()) {
 			isWinner = true;
+			row++;
 			endGame();
 		} else {
 			idx = 0;
 			row++;
-
 			if (row === ROWS) {
 				endGame();
 			}
