@@ -1,5 +1,7 @@
 import { Map } from 'svelte/reactivity';
 import { validateGuess, getRandomWord, isValidWord } from '$lib/utils/words';
+import { TRANSITION_DELAY, TRANSITION_DURATION } from '$lib/components/grid-item.svelte';
+import { setTransitionTimeout } from '$lib/utils/transition-timeout';
 
 export enum GuessType {
 	None,
@@ -9,17 +11,19 @@ export enum GuessType {
 }
 
 export enum GameState {
+	Resetting,
 	Playing,
 	Ended
 }
 
 export interface Guess {
-	character: string;
+	front: string;
+	back: string;
 	type: GuessType;
 }
 
-const CHARACTERS_PER_ROW = 5;
-const ROWS = 6;
+export const CHARACTERS_PER_ROW = 5;
+export const ROWS = 6;
 
 export function createGameStore() {
 	let idx = 0;
@@ -28,7 +32,8 @@ export function createGameStore() {
 
 	for (let i = 0; i < CHARACTERS_PER_ROW * ROWS; i++) {
 		guesses.push({
-			character: '',
+			front: '',
+			back: '',
 			type: GuessType.None
 		});
 	}
@@ -40,21 +45,31 @@ export function createGameStore() {
 	let word = $state(getRandomWord());
 
 	function reset() {
-		word = getRandomWord();
 		idx = 0;
 		row = 0;
-		state = GameState.Playing;
+
 		keyboard.clear();
+		state = GameState.Resetting;
 
 		for (let i = 0; i < CHARACTERS_PER_ROW * ROWS; i++) {
-			guesses[i].character = '';
-			guesses[i].type = GuessType.None;
+			guesses[i].front = '';
 		}
+
+		setTransitionTimeout(() => {
+			state = GameState.Playing;
+			word = getRandomWord();
+
+			for (let i = 0; i < CHARACTERS_PER_ROW * ROWS; i++) {
+				guesses[i].back = '';
+				guesses[i].type = GuessType.None;
+			}
+		});
 	}
 
 	function add(character: string) {
-		if (idx !== 5) {
-			getCurrentGuessAtIndex(idx).character = character;
+		if (idx !== CHARACTERS_PER_ROW) {
+			getCurrentGuessAtIndex(idx).front = character;
+			getCurrentGuessAtIndex(idx).back = character;
 			idx++;
 		}
 	}
@@ -62,7 +77,7 @@ export function createGameStore() {
 	function remove() {
 		if (idx !== 0) {
 			idx--;
-			getCurrentGuessAtIndex(idx).character = '';
+			getCurrentGuessAtIndex(idx).front = '';
 		}
 	}
 
@@ -73,7 +88,7 @@ export function createGameStore() {
 	}
 
 	function submit() {
-		if (idx !== 5 || !verifyWord()) return false;
+		if (idx !== CHARACTERS_PER_ROW || !verifyWord()) return false;
 
 		const feedback = validateGuess(word, getCurrentGuess());
 
@@ -85,17 +100,23 @@ export function createGameStore() {
 
 		if (word === getCurrentGuess()) {
 			isWinner = true;
-			state = GameState.Ended;
+			endGame();
 		} else {
 			idx = 0;
 			row++;
 
 			if (row === ROWS) {
-				state = GameState.Ended;
+				endGame();
 			}
 		}
 
 		return true;
+	}
+
+	function endGame() {
+		setTransitionTimeout(() => {
+			state = GameState.Ended;
+		});
 	}
 
 	function getCurrentGuessAtIndex(index: number) {
@@ -105,17 +126,17 @@ export function createGameStore() {
 	function getCurrentGuess() {
 		let guess = '';
 		for (let i = 0; i < CHARACTERS_PER_ROW; i++) {
-			guess += getCurrentGuessAtIndex(i).character;
+			guess += getCurrentGuessAtIndex(i).front;
 		}
 
 		return guess;
 	}
 
 	function updateKeyboard(guess: Guess) {
-		const currentGuessType = keyboard.get(guess.character) ?? GuessType.None;
+		const currentGuessType = keyboard.get(guess.front) ?? GuessType.None;
 
 		if (guess.type > currentGuessType) {
-			keyboard.set(guess.character, guess.type);
+			keyboard.set(guess.front, guess.type);
 		}
 	}
 

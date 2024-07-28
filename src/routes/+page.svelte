@@ -14,7 +14,7 @@
 
 	function onSubmit() {
 		if (!store.submit()) {
-			grid.wiggleRow(store.row);
+			grid.wiggleRow();
 		}
 	}
 
@@ -30,7 +30,7 @@
 <div class="relative min-h-dvh flex justify-center items-center">
 	<div class="w-full max-w-[484px] px-2">
 		<div class="px-2 md:px-16 mb-4">
-			<Grid bind:this={grid} guesses={store.guesses} />
+			<Grid bind:this={grid} guesses={store.guesses} currentRow={store.row} />
 		</div>
 		<Keyboard
 			{onKey}

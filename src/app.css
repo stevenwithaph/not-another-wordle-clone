@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.preserve-3d {
+	transform-style: preserve-3d;
+}
+
+.backface-hidden {
+	backface-visibility: hidden;
+}
+
+.backcard {
+	transform: rotateY(180deg) scaleX(-1) scaleY(-1);
+}
+
+.flipped {
+	transform: rotateX(180deg);
+}
