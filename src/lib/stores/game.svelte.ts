@@ -1,6 +1,5 @@
-import { Map } from 'svelte/reactivity';
+import { SvelteMap } from 'svelte/reactivity';
 import { validateGuess, getRandomWord, isValidWord } from '$lib/utils/words';
-import { TRANSITION_DELAY, TRANSITION_DURATION } from '$lib/components/grid-item.svelte';
 import { setTransitionTimeout } from '$lib/utils/transition-timeout';
 
 export enum GuessType {
@@ -38,7 +37,7 @@ export function createGameStore() {
 		});
 	}
 
-	const keyboard = $state(new Map<string, GuessType>());
+	const keyboard = $state(new SvelteMap<string, GuessType>());
 	let state = $state<GameState>(GameState.Playing);
 	let row = $state(0);
 	let isWinner = $state(false);
