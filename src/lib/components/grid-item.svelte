@@ -1,11 +1,7 @@
-<script context="module" lang="ts">
-	export const TRANSITION_DURATION: number = 750;
-	export const TRANSITION_DELAY: number = 100;
-</script>
-
 <script lang="ts">
 	import { GuessType } from '$lib/stores/game.svelte';
 	import { BackgroundColour } from '$lib/utils/background-colours';
+	import { TRANSITION_DELAY, TRANSITION_DURATION } from '$lib/utils/timing';
 	import GridItemEmpty from './grid-item-empty.svelte';
 	import GridItemGuessed from './grid-item-guessed.svelte';
 

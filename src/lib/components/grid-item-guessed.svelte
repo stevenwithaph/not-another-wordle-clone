@@ -10,7 +10,7 @@
 
 <div
 	class={`w-full h-full flex justify-center items-center rounded ${background}`}
-	id={`grid-item-${index}`}
+	id={`grid-item-back-${index}`}
 >
 	{character}
 </div>

@@ -12,7 +12,7 @@
 	class:border-white={character !== ''}
 	class:border-zinc-700={character === ''}
 	class="w-full h-full flex justify-center items-center border-2 rounded transition-colors"
-	id={`grid-item-${index}`}
+	id={`grid-item-front-${index}`}
 >
 	{character}
 </div>

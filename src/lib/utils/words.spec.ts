@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { validateGuess } from './words';
 import { GuessType } from '$lib/stores/game.svelte';
 
+console.log('GUESS', GuessType);
+
 const correct = new Array(5).fill(GuessType.Correct);
 const incorrect = new Array(5).fill(GuessType.Incorrect);
 const valid = new Array(5).fill(GuessType.Valid);
