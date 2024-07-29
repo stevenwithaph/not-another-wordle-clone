@@ -10,8 +10,6 @@
 
 	function onKey(key: string) {
 		store.add(key);
-
-		console.log(store.word);
 	}
 
 	function onSubmit() {
